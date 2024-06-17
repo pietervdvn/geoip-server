@@ -144,6 +144,7 @@ export class Main {
 
     private readonly ipv4: IP2Location
     private readonly ipv6: IP2Location
+    private readonly boottime = new Date()
 
     constructor() {
         console.log("Loading databases from ./data/")
@@ -163,6 +164,12 @@ export class Main {
                 mimetype: "application/json",
                 handle: async (path, params, request) => {
                     return JSON.stringify(this.fetchIp(request))
+                }
+            }, {
+                mustMatch: "status",
+                mimetype: "application/json",
+                handle: async () => {
+                    return JSON.stringify({online: true, started: this.boottime.toISOString()})
                 }
             }])
     }
