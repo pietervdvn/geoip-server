@@ -164,9 +164,6 @@ export class Main {
         this.ipv6.open("./data/IP2LOCATION-LITE-DB5.IPV6.BIN");
         console.log("Loaded IPv6 database")
 
-        const result = this.ipv4.getAll("78.23.104.174");
-        console.log("Testresult on fixed IP address:", result)
-
         new Server(2347, {},
             [{
                 mustMatch: "ip",
@@ -192,6 +189,7 @@ export class Main {
         const fullResult = db.getAll(ipAddress)
         const result: Record<string, string> = {}
         for (const k of this.allowedKeys) {
+
             result[k] = fullResult[k]
         }
         return <IP2LocationResult> <any> result
