@@ -145,6 +145,16 @@ export class Main {
     private readonly ipv4: IP2Location
     private readonly ipv6: IP2Location
     private readonly boottime = new Date()
+    private readonly allowedKeys = [
+        "latitude",
+        "longitude",
+        "region",
+        "countryLong",
+        "countryShort",
+        "ip",
+        "ipNo"
+    ] as const
+    private readonly keysSet = new Set<string>(this.allowedKeys)
 
     constructor() {
         console.log("Loading databases from ./data/")
@@ -180,7 +190,13 @@ export class Main {
         //see : https://github.com/kirsch33/realip/issues/14
         const ipAddress = <string>request.headers['x-forwarded-for']
         const db = ipAddress.match(Main.ipv4Regex) ? this.ipv4 : this.ipv6
-        return db.getAll(ipAddress)
+        const result = db.getAll(ipAddress)
+        for (const k in result) {
+            if (!this.keysSet.has(k)) {
+                delete result[k]
+            }
+        }
+        return result
     }
 
 }
