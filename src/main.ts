@@ -154,7 +154,6 @@ export class Main {
         "ip",
         "ipNo"
     ] as const
-    private readonly keysSet = new Set<string>(this.allowedKeys)
 
     constructor() {
         console.log("Loading databases from ./data/")
@@ -190,14 +189,12 @@ export class Main {
         //see : https://github.com/kirsch33/realip/issues/14
         const ipAddress = <string>request.headers['x-forwarded-for']
         const db = ipAddress.match(Main.ipv4Regex) ? this.ipv4 : this.ipv6
-        const result: IP2LocationResult = db.getAll(ipAddress)
-        for (const k in result) {
-            if (!this.keysSet.has(k)) {
-                // @ts-ignore
-                delete result[k]
-            }
+        const fullResult = db.getAll(ipAddress)
+        const result = {}
+        for (const k in this.allowedKeys) {
+            result[k] = fullResult[k]
         }
-        return result
+        return <any>result
     }
 
 }
