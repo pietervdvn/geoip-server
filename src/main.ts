@@ -178,7 +178,7 @@ export class Main {
 
     private fetchIp(request: http.IncomingMessage): IP2LocationResult {
         //see : https://github.com/kirsch33/realip/issues/14
-        const ipAddress = <string>request.headers['HTTP_X_FORWARDED_FOR']
+        const ipAddress = <string>request.headers['x-forwarded-for']
         const db = ipAddress.match(Main.ipv4Regex) ? this.ipv4 : this.ipv6
         return db.getAll(ipAddress)
     }
