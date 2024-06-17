@@ -190,11 +190,11 @@ export class Main {
         const ipAddress = <string>request.headers['x-forwarded-for']
         const db = ipAddress.match(Main.ipv4Regex) ? this.ipv4 : this.ipv6
         const fullResult = db.getAll(ipAddress)
-        const result = {}
-        for (const k in this.allowedKeys) {
+        const result: Record<string, string> = {}
+        for (const k of this.allowedKeys) {
             result[k] = fullResult[k]
         }
-        return <any>result
+        return <IP2LocationResult> <any> result
     }
 
 }
