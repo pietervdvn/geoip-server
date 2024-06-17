@@ -190,9 +190,10 @@ export class Main {
         //see : https://github.com/kirsch33/realip/issues/14
         const ipAddress = <string>request.headers['x-forwarded-for']
         const db = ipAddress.match(Main.ipv4Regex) ? this.ipv4 : this.ipv6
-        const result = db.getAll(ipAddress)
+        const result: IP2LocationResult = db.getAll(ipAddress)
         for (const k in result) {
             if (!this.keysSet.has(k)) {
+                // @ts-ignore
                 delete result[k]
             }
         }
