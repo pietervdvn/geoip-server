@@ -1,0 +1,15 @@
+{
+  "name": "geoip-server",
+  "version": "0.0.1",
+  "description": "Simple Geo-ip server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pietervdvn",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "ip2location-nodejs": "^9.6.1",
+    "ts-node": "^10.9.2"
+  }
+}
