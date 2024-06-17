@@ -157,7 +157,7 @@ export class Main {
         const result = this.ipv4.getAll("78.23.104.174");
         console.log("Testresult on fixed IP address:", result)
 
-        new Server(2346, {},
+        new Server(2347, {},
             [{
                 mustMatch: "ip",
                 mimetype: "application/json",
