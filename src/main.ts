@@ -142,10 +142,7 @@ interface IP2LocationResult {
 
 export class Main {
 
-    /**
-     * ALso contains IPV4
-     * @private
-     */
+    private readonly ipv4: IP2Location
     private readonly ipv6: IP2Location
     private readonly boottime = new Date()
     private readonly allowedKeys = [
@@ -160,11 +157,12 @@ export class Main {
 
     constructor() {
         console.log("Loading databases from ./data/")
+        this.ipv4 = new IP2Location();
+        this.ipv4.open("./data/IP2LOCATION-LITE-DB5.BIN");
         console.log("Loaded IPv4 database")
         this.ipv6 = new IP2Location();
         this.ipv6.open("./data/IP2LOCATION-LITE-DB5.IPV6.BIN");
         console.log("Loaded IPv6 database")
-
 
 
         new Server(2347, {},
@@ -177,11 +175,9 @@ export class Main {
             }, {
                 mustMatch: "status",
                 mimetype: "application/json",
-                handle: async () => JSON.stringify({
-                    online: true,
-                    started: this.boottime.toISOString(),
-                    packageVersion: this.ipv6.getPackageVersion()
-                })
+                handle: async () => {
+                    return JSON.stringify({online: true, started: this.boottime.toISOString(), packageVersion4: this.ipv4.getPackageVersion(),  packageVersion6: this.ipv6.getPackageVersion()})
+                }
             }])
     }
 
@@ -190,7 +186,7 @@ export class Main {
     private fetchIp(request: http.IncomingMessage): IP2LocationResult {
         //see : https://github.com/kirsch33/realip/issues/14
         const ipAddress = <string>request.headers['x-forwarded-for']
-        const db = this.ipv6
+        const db = ipAddress.match(Main.ipv4Regex) ? this.ipv4 : this.ipv6
         const fullResult = db.getAll(ipAddress)
         const result: Record<string, string> = {}
         for (const k of this.allowedKeys) {
